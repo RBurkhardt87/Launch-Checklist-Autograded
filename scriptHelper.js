@@ -30,9 +30,15 @@ function addDestinationInfo(document, name, diameter, star, distance, moons, ima
     const copilotStatus = document.getElementById("copilotStatus");
     const fuelStatus = document.getElementById("fuelStatus");
     const cargoStatus = document.getElementById("cargoStatus");
+    const launchStatus = document.getElementById("launchStatus");
 
+    //TODO: set up form and buttons
+    const launchForm = document.getElementById("launchForm");
+    const formSubmit = document.getElementById("formSubmit");
+   
 
  function validateInput(testInput) {
+
     
 
 
@@ -41,6 +47,7 @@ function addDestinationInfo(document, name, diameter, star, distance, moons, ima
     if (pilotName === ""){
         window.alert("You must enter the Pilot's name.");
         return "Empty";
+        
     } 
     
     if (copilotName === "") {
@@ -95,28 +102,52 @@ function addDestinationInfo(document, name, diameter, star, distance, moons, ima
 
  //-----------------------------------------------------------------------------------------------------------------------------------------------
  
- 
- function formSubmission(document, list, pilot, copilot, fuelLevel, cargoLevel) {
+//  function formSubmission(document, list, pilot, copilot, fuelLevel, cargoLevel)  <---- this is what the parameter names were set to. I changed to match the variables I personally used. 
+
+ function formSubmission(document, faultyItems, pilotName, copilotName, fuelLevel, cargoMass) {
+    
+    console.log("is anything happening");
     validateInput();
 
     // TODO: update shuttle requirements
-
+    faultyItems.style.visibility = "visible";
     //pilotStatus or maybe just make faultyItem visible on the cargo status line since the form will be completed
-    faultyItems.pilotStatus.style.visibility = "visible";
-    pilotStatus.innerHTML = pilotName;
+    
+    pilotStatus.innerHTML = `Pilot ${pilotName} is ready for launch`;
 
     //copilotStatus
-    copilotStatus.innerHTML = copilotName;
+    copilotStatus.innerHTML = `Co-pilot ${copilotName} is ready for launch` ;
 
     //fuelStatus --- need to make if statement for fuel levels
-    fuelStatus.innerHTML = fuelLevel;
+    
+    if (fuelLevel < 10000) {
+        launchStatus.innerHTML = "Shuttle Not Ready for Launch";
+        launchStatus.style.color = "red";
+        fuelStatus.innerHTML = "Fuel level too low for launch";
+    } else {
+        launchStatus.innerHTML = "Shuttle is Ready for Launch"
+        launchStatus.style.color = "green";
+        fuelStatus.innerHTML ="Fuel level high enough for launch"
+    }
 
 
     //cargoStatus -- need to make if statement for cargo mass
-    cargoStatus.innerHTML = cargoMass;
+    
+    if (cargoMass > 10000) {
+        launchStatus.innerHTML = "Shuttle Not Ready for Launch";
+        launchStatus.style.color = "red";
+        cargoStatus.innerHTML = "Cargo mass too heavy for launch";
+    } else {
+        launchStatus.innerHTML = "Shuttle is Ready for Launch";
+        launchStatus.style.color = "green";
+        cargoStatus.innerHTML = "Cargo mass low enough for launch";
+    }
  };
 
-
+ formSubmit.addEventListener("click", function(event){
+    event.preventDefault();
+    formSubmission();
+});
 
 
  
