@@ -1,9 +1,7 @@
 
+// Write your helper functions here!
 
 
- // Write your helper functions here!
-
-require('cross-fetch/polyfill');
 
 function addDestinationInfo(document, name, diameter, star, distance, moons, imageUrl) {
     // Here is the HTML formatting for our mission target div.
@@ -39,8 +37,6 @@ function addDestinationInfo(document, name, diameter, star, distance, moons, ima
  
  function pickPlanet(planets) {
  }
-
- //---------------------------------------------------------------------------------------------------------------------------------------------
  
  module.exports.addDestinationInfo = addDestinationInfo;
  module.exports.validateInput = validateInput;
