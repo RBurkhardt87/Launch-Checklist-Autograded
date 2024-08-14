@@ -46,7 +46,7 @@
 
 
 
-        //NOTE: Alert for all fields to be entered is working. Stops form from submitting until they are entered in.            
+        //TODO: Alert for all fields to be entered is working. Stops form from submitting until they are entered in.            
         if (pilotInput.value.trim() === "" || copilotInput.value.trim() === "" || fuelInput.value.trim() === "" || cargoInput.value.trim() === "") {
             alert("All field are required!");
             event.preventDefault();      
@@ -118,6 +118,8 @@
                 fuelStatus.innerHTML ="Fuel level high enough for launch";
             }
         }
+
+
     
         //TODO: cargoStatus -- need to make if statement for cargo mass    
         if (validCargoInput !=="Empty" && validCargoInput === "Is a Number"){
@@ -133,7 +135,21 @@
  
         //TODO: make the faultyItem div box appear with status update
         faultyItemsList.style.visibility = "visible";
-    
+        
+
+
+        //NOTE: myFetch function is returning back the json objects. So it is working properly.
+        myFetch();
+
+
+
+        //NOTE: fix this function and figure out what I am passing into it exactly
+        // pickPlanet(planetsReturned/data???);
+        
+
+
+        //NOTE: I believe we would want to call the formSubmission maybe in the fetch of data??? HOWEVER, I can't get the function to work when I call it regardless
+        // formSubmission(document, faultyItemsList, pilotInput, copilotInput, fuelInput, cargoInput);
     });
 
 });
@@ -144,13 +160,13 @@ function addDestinationInfo(document, name, diameter, star, distance, moons, ima
     /*
                  <h2>Mission Destination</h2>
                  <ol>
-                     <li>Name: </li>
-                     <li>Diameter: </li>
+                     <li>Name: ${name} </li>
+                     <li>Diameter: ${diameter} </li>
                      <li>Star: ${star}</li>
-                     <li>Distance from Earth: </li>
-                     <li>Number of Moons: </li>
+                     <li>Distance from Earth: ${distance} </li>
+                     <li>Number of Moons: ${moons} </li>
                  </ol>
-                 <img src="">
+                 <img src="${image}">
     */
  }
  
@@ -177,59 +193,21 @@ function addDestinationInfo(document, name, diameter, star, distance, moons, ima
  function formSubmission(document, list, pilot, copilot, fuelLevel, cargoLevel) {
     
     //NOTE: this was coming back correctly. Don't get rid of these. This is most likely how I am suppose to call the function and pass in the inputs as arguments. Then I take those validated returns to write my if statements for formSubmission <---maybe?
+    const launchStatus = document.getElementById("launchStatus");
+    const pilotStatus = document.getElementById("pilotStatus");
+    const copilotStatus = document.getElementById("copilotStatus");
+    const fuelStatus = document.getElementById("fuelStatus");
+    const cargoStatus = document.getElementById("cargoStatus");
+    const faultyItemsList = document.getElementById("faultyItems");
+
     let validPilotName = validateInput(pilotInput);
     let validCopilotName = validateInput(copilotInput);
     let validFuelInput = validateInput(fuelInput);
     let validCargoInput = validateInput(cargoInput);
 
-    //NOTE: Ok, so maybe I need to replace the specific variables in the if statements with the parameter variables. Then, when I call the function I will past in the actual variables that represent the valid inputs as the arguments. -----> NOT SURE WHAT "document" IS SUPPOSED TO REPRESENT THO. 
+ 
 
-   
-  
-
-    faultyItemsList.style.visibility = "visible";
-
-    //pilotStatus and copilotStatus
-    if (validPilotName !== "Empty" && validPilotName === "Not a Number"){
-        pilot.innerHTML = `Pilot ${pilotInput.value} is ready for launch`;
-    }
-
-    if (validCopilotName !== "Empty" && validCopilotName === "Not a Number"){
-        copilot.innerHTML = `Co-pilot ${copilotInput.value} is ready for launch` ;
-    }
-     
-    
-    //fuelStatus --- need to make if statement for fuel levels
-    if (validFuelInput !== "Empty" && validFuelInput === "Is a Number"){
-        if (Number(fuelInput.value) < 10000) {
-            document.innerHTML = "Shuttle Not Ready for Launch";
-            document.style.color = "red";
-            fuelLevel.innerHTML = "Fuel level too low for launch";
-
-        } else if (Number(fuelInput.value) > 10000) {
-            fuelLevel.innerHTML ="Fuel level high enough for launch";
-        }
-    }
-
-    //cargoStatus -- need to make if statement for cargo mass    
-    if (validCargoInput !=="Empty" && validCargoInput === "Is a Number"){
-        if (Number(cargoInput.value) > 10000) {
-            document.innerHTML = "Shuttle Not Ready for Launch";
-            document.style.color = "red";
-            cargoLevel.innerHTML = "Cargo mass too heavy for launch";
-    
-        } else if (Number(cargoInput.value) < 10000) {
-            cargoLevel.innerHTML = "Cargo mass low enough for launch";
-        }
-    }
-
-
-
-
-    //-----------------------------------------------NOTE: Need to insert parameter variables in for validation--------------------------------------//
-    faultyItemsList.style.visibility = "visible";
-
-    //pilotStatus and copilotStatus
+    //TODO: pilotStatus and copilotStatus
     if (validPilotName !== "Empty" && validPilotName === "Not a Number"){
         pilotStatus.innerHTML = `Pilot ${pilotInput.value} is ready for launch`;
     }
@@ -237,46 +215,55 @@ function addDestinationInfo(document, name, diameter, star, distance, moons, ima
     if (validCopilotName !== "Empty" && validCopilotName === "Not a Number"){
         copilotStatus.innerHTML = `Co-pilot ${copilotInput.value} is ready for launch` ;
     }
-     
     
-    //fuelStatus --- need to make if statement for fuel levels
+
+
+    //TODO:  If both cargo and fuel level is valid for launch
+    if (validFuelInput !== "Empty" && validFuelInput === "Is a Number" && validCargoInput !=="Empty" && validCargoInput === "Is a Number" ){
+        if (Number(cargoInput.value) <= 10000 && Number(fuelInput.value) >= 10000){
+        launchStatus.innerHTML = "Shuttle is Ready for Launch";
+        launchStatus.style.color = "green";
+        }
+    };
+
+
+
+    //TODO: fuelStatus --- need to make if statement for fuel levels
     if (validFuelInput !== "Empty" && validFuelInput === "Is a Number"){
         if (Number(fuelInput.value) < 10000) {
             launchStatus.innerHTML = "Shuttle Not Ready for Launch";
             launchStatus.style.color = "red";
             fuelStatus.innerHTML = "Fuel level too low for launch";
 
-        } else if (Number(fuelInput.value) > 10000) {
+        } else if (Number(fuelInput.value) >= 10000) {
             fuelStatus.innerHTML ="Fuel level high enough for launch";
         }
     }
 
-    
-    //cargoStatus -- need to make if statement for cargo mass    
+
+
+    //TODO: cargoStatus -- need to make if statement for cargo mass    
     if (validCargoInput !=="Empty" && validCargoInput === "Is a Number"){
         if (Number(cargoInput.value) > 10000) {
             launchStatus.innerHTML = "Shuttle Not Ready for Launch";
             launchStatus.style.color = "red";
             cargoStatus.innerHTML = "Cargo mass too heavy for launch";
-    
-        } else if (Number(cargoInput.value) < 10000) {
+
+        } else if (Number(cargoInput.value) <= 10000) {
             cargoStatus.innerHTML = "Cargo mass low enough for launch";
         }
     }
 
+    //TODO: make the faultyItem div box appear with status update
+    faultyItemsList.style.visibility = "visible";
 
-    // If Both fuel level and cargo are correct numbers then shuttle is ready for launch
-    if (validFuelInput !== "Empty" && validFuelInput === "Is a Number" && validCargoInput !=="Empty" && validCargoInput === "Is a Number" ){
-        if (Number(cargoInput.value) < 10000 && Number(fuelInput.value) > 10000){
-            launchStatus.innerHTML = "Shuttle is Ready for Launch";
-            launchStatus.style.color = "green";
-        }
-    }
+
+ 
     
+ };
 
-};
 
-//--------------------------------------NOTE: ABOVE: Need to swap out the specific variables that will pass as arguments with parameter variables--------------------//
+//--------------NOTE: ABOVE: Need to swap out the specific variables that will pass as arguments with parameter variables--------------------//
  
 async function myFetch() {
     let planetsReturned;
@@ -290,9 +277,15 @@ async function myFetch() {
      return planetsReturned;
 };
  
+    //NOTE: That's how we did it in Prep Example 1 with an array--- may need to be adjusted to work with a fetched json file.
  function pickPlanet(planets) {
- }
+    let randomIndex = Math.floor(Math.random()* planets.length);
+    return planets[randomIndex];
+};
+    
  
+
+
  module.exports.addDestinationInfo = addDestinationInfo;
  module.exports.validateInput = validateInput;
  module.exports.formSubmission = formSubmission;
