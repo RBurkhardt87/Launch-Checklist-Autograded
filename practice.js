@@ -25,7 +25,7 @@
    const formSubmitButton = document.getElementById("formSubmit");
 
    //TODO: The div box holding the LaunchStatusCheck items needs to be made visible once form in submitted.
-   const faultyItemsList = document.getElementById("FaultyItems");
+   const faultyItemsList = document.getElementById("faultyItems");
 
 
 
@@ -36,6 +36,9 @@
     const form = document.querySelector('form');
     form.addEventListener("submit", function(event) {
 
+
+
+        //NOTE: Variables for the alert message and validate input function
         const pilotInput = document.getElementById("pilotName");
         const copilotInput = document.getElementsByName("copilotName")[0];
         const fuelInput = document.getElementsByName("fuelLevel")[0];
@@ -70,11 +73,66 @@
         event.preventDefault();
         testInput = [validPilotName, validCopilotName, validFuelInput, validCargoInput];
         console.log(testInput);
+
+
+
+        //NOTE: variables for the formSubmission/update LaunchStatus
+        const launchStatus = document.getElementById("launchStatus");
+        const pilotStatus = document.getElementById("pilotStatus");
+        const copilotStatus = document.getElementById("copilotStatus");
+        const fuelStatus = document.getElementById("fuelStatus");
+        const cargoStatus = document.getElementById("cargoStatus");
+        const faultyItemsList = document.getElementById("faultyItems");
+       
+         
+
+        //TODO: pilotStatus and copilotStatus
+        if (validPilotName !== "Empty" && validPilotName === "Not a Number"){
+            pilotStatus.innerHTML = `Pilot ${pilotInput.value} is ready for launch`;
+        }
+    
+        if (validCopilotName !== "Empty" && validCopilotName === "Not a Number"){
+            copilotStatus.innerHTML = `Co-pilot ${copilotInput.value} is ready for launch` ;
+        }
+         
+
+
+        //TODO:  If both cargo and fuel level is valid for launch
+        if (validFuelInput !== "Empty" && validFuelInput === "Is a Number" && validCargoInput !=="Empty" && validCargoInput === "Is a Number" ){
+            if (Number(cargoInput.value) <= 10000 && Number(fuelInput.value) >= 10000){
+            launchStatus.innerHTML = "Shuttle is Ready for Launch";
+            launchStatus.style.color = "green";
+            }
+        };
+
+
+
+        //TODO: fuelStatus --- need to make if statement for fuel levels
+        if (validFuelInput !== "Empty" && validFuelInput === "Is a Number"){
+            if (Number(fuelInput.value) < 10000) {
+                launchStatus.innerHTML = "Shuttle Not Ready for Launch";
+                launchStatus.style.color = "red";
+                fuelStatus.innerHTML = "Fuel level too low for launch";
+    
+            } else if (Number(fuelInput.value) >= 10000) {
+                fuelStatus.innerHTML ="Fuel level high enough for launch";
+            }
+        }
+    
+        //TODO: cargoStatus -- need to make if statement for cargo mass    
+        if (validCargoInput !=="Empty" && validCargoInput === "Is a Number"){
+            if (Number(cargoInput.value) > 10000) {
+                launchStatus.innerHTML = "Shuttle Not Ready for Launch";
+                launchStatus.style.color = "red";
+                cargoStatus.innerHTML = "Cargo mass too heavy for launch";
         
-
-
-        formSubmission(launchStatus, faultyItemsList, pilotStatus, copilotStatus, fuelStatus, cargoStatus);
-        event.preventDefault();
+            } else if (Number(cargoInput.value) <= 10000) {
+                cargoStatus.innerHTML = "Cargo mass low enough for launch";
+            }
+        }
+ 
+        //TODO: make the faultyItem div box appear with status update
+        faultyItemsList.style.visibility = "visible";
     
     });
 
@@ -101,15 +159,15 @@ function addDestinationInfo(document, name, diameter, star, distance, moons, ima
  //NOTE: I believe that validation is correct since it is returning what I would expect when being called with inputs as arguments (up above). However, when I try to use it inside formSubmission--- it says it can't read the .value
  function validateInput(testInput) {
 
-    if (testInput.value === ""){
+    if (testInput.value.trim() === ""){
         return "Empty";        
     } 
 
-    if (isNaN(Number(testInput.value))){
+    if (isNaN(Number(testInput.value.trim()))){
         return "Not a Number"
     }
 
-    if (!isNaN(Number(testInput.value))) {
+    if (!isNaN(Number(testInput.value.trim()))) {
         return "Is a Number"
     }
 }; 
@@ -127,6 +185,48 @@ function addDestinationInfo(document, name, diameter, star, distance, moons, ima
     //NOTE: Ok, so maybe I need to replace the specific variables in the if statements with the parameter variables. Then, when I call the function I will past in the actual variables that represent the valid inputs as the arguments. -----> NOT SURE WHAT "document" IS SUPPOSED TO REPRESENT THO. 
 
    
+  
+
+    faultyItemsList.style.visibility = "visible";
+
+    //pilotStatus and copilotStatus
+    if (validPilotName !== "Empty" && validPilotName === "Not a Number"){
+        pilot.innerHTML = `Pilot ${pilotInput.value} is ready for launch`;
+    }
+
+    if (validCopilotName !== "Empty" && validCopilotName === "Not a Number"){
+        copilot.innerHTML = `Co-pilot ${copilotInput.value} is ready for launch` ;
+    }
+     
+    
+    //fuelStatus --- need to make if statement for fuel levels
+    if (validFuelInput !== "Empty" && validFuelInput === "Is a Number"){
+        if (Number(fuelInput.value) < 10000) {
+            document.innerHTML = "Shuttle Not Ready for Launch";
+            document.style.color = "red";
+            fuelLevel.innerHTML = "Fuel level too low for launch";
+
+        } else if (Number(fuelInput.value) > 10000) {
+            fuelLevel.innerHTML ="Fuel level high enough for launch";
+        }
+    }
+
+    //cargoStatus -- need to make if statement for cargo mass    
+    if (validCargoInput !=="Empty" && validCargoInput === "Is a Number"){
+        if (Number(cargoInput.value) > 10000) {
+            document.innerHTML = "Shuttle Not Ready for Launch";
+            document.style.color = "red";
+            cargoLevel.innerHTML = "Cargo mass too heavy for launch";
+    
+        } else if (Number(cargoInput.value) < 10000) {
+            cargoLevel.innerHTML = "Cargo mass low enough for launch";
+        }
+    }
+
+
+
+
+    //-----------------------------------------------NOTE: Need to insert parameter variables in for validation--------------------------------------//
     faultyItemsList.style.visibility = "visible";
 
     //pilotStatus and copilotStatus
@@ -151,6 +251,7 @@ function addDestinationInfo(document, name, diameter, star, distance, moons, ima
         }
     }
 
+    
     //cargoStatus -- need to make if statement for cargo mass    
     if (validCargoInput !=="Empty" && validCargoInput === "Is a Number"){
         if (Number(cargoInput.value) > 10000) {
@@ -162,21 +263,20 @@ function addDestinationInfo(document, name, diameter, star, distance, moons, ima
             cargoStatus.innerHTML = "Cargo mass low enough for launch";
         }
     }
-   
-    //If Both fuel level and cargo are correct numbers then shuttle is ready for launch
-    // if (validFuelInput !== "Empty" && validFuelInput === "Is a Number" && validCargoInput !=="Empty" && validCargoInput === "Is a Number" ){
-    //     if (Number(cargoInput.value) < 10000 && Number(fuelInput.value) > 10000){
-    //         launchStatus.innerHTML = "Shuttle is Ready for Launch";
-    //         launchStatus.style.color = "green";
-    //     }
-    // }
-    //NOTE: maybe I could just write this instead, seems easier and a little clearer:
-    if (fuelStatus.innerHTML === "Fuel level high enough for launch" && cargoStatus === "Cargo mass low enough for launch") {
-        launchStatus.innerHTML = "Shuttle is Ready for Launch";
-        launchStatus.style.color = "green";
+
+
+    // If Both fuel level and cargo are correct numbers then shuttle is ready for launch
+    if (validFuelInput !== "Empty" && validFuelInput === "Is a Number" && validCargoInput !=="Empty" && validCargoInput === "Is a Number" ){
+        if (Number(cargoInput.value) < 10000 && Number(fuelInput.value) > 10000){
+            launchStatus.innerHTML = "Shuttle is Ready for Launch";
+            launchStatus.style.color = "green";
+        }
     }
+    
 
 };
+
+//--------------------------------------NOTE: ABOVE: Need to swap out the specific variables that will pass as arguments with parameter variables--------------------//
  
 async function myFetch() {
     let planetsReturned;
