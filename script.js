@@ -4,6 +4,26 @@
 
 window.addEventListener("load", function() {
 
+   
+
+    myFetch();
+    const form = document.querySelector('form');
+    form.addEventListener("submit", function(event) {
+        
+        event.preventDefault(); 
+
+        
+        const pilotInput = document.getElementById("pilotName").value;
+        const copilotInput = document.getElementsByName("copilotName")[0].value;
+        const fuelInput = document.getElementsByName("fuelLevel")[0].value;
+        const cargoInput = document.getElementsByName("cargoMass")[0].value;
+        const faultyItemsList = document.getElementById("faultyItems");
+
+        
+        formSubmission(document, faultyItemsList, pilotInput, copilotInput, fuelInput, cargoInput);
+    });
+
+
     let listedPlanets;
     // Set listedPlanetsResponse equal to the value returned by calling myFetch()
     let listedPlanetsResponse;
