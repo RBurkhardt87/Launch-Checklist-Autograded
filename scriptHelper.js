@@ -38,15 +38,15 @@ function addDestinationInfo(document, name, diameter, star, distance, moons, ima
 
 function validateInput(testInput) {
 
-    if (testInput === ""){
+    if (testInput.trim() === ""){
         return "Empty";        
     } 
 
-    if (isNaN(Number(testInput))){
+    if (isNaN(Number(testInput.trim()))){
         return "Not a Number"
     }
 
-    if (!isNaN(Number(testInput))) {
+    if (!isNaN(Number(testInput.trim()))) {
         return "Is a Number"
     }
 }; 
@@ -83,65 +83,73 @@ function formSubmission(document, list, pilot, copilot, fuelLevel, cargoLevel) {
 
 
     if (pilotInput.value.trim() === "" || copilotInput.value.trim() === "" || fuelInput.value.trim() === "" || cargoInput.value.trim() === "") {
-        window.alert("All field are required!");
+        window.alert("All field are required!");            
+    }
+
+
+    if (validPilotName === "Not a Number" && validCopilotName === "Not a Number" && validFuelInput === "Is a Number" && validCargoInput === "Is a Number"){
+        if (Number(fuelInput.value) >= 10000 && Number(fuelInput.value) <= 10000 ){
+            launchStatus.innerHTML = "Shuttle is Ready for Launch";
+            launchStatus.style.color = "green";
+        }
+    }
+
+
+        if (validPilotName === "Not a Number" ){
+            pilotStatus.innerHTML = `Pilot ${pilotInput.value} is ready for launch`;
+        } else {
+            alert("Pilot name must contain letters only")
+            pilotStatus.innerHTML = "Awaiting a Valid Pilot Name";
+            launchStatus.innerHTML = "Shuttle Not Ready for Launch";
+            launchStatus.style.color = "red"; 
+        }
+
+
+        if (validCopilotName === "Not a Number" ){
+            copilotStatus.innerHTML = `Co-pilot ${copilotInput.value} is ready for launch`;
+        } else {
+            alert("Co-pilot name must contain letters only")
+            copilotStatus.innerHTML = "Awaiting a Valid Co-pilot Name";
+            launchStatus.innerHTML = "Shuttle Not Ready for Launch";
+            launchStatus.style.color = "red"; 
+        }
+
+
+        if (validFuelInput === "Empty" || validFuelInput === "Not a Number"){
+            alert("Fuel level must be a number of 10,000 or greater to launch");
+            fuelStatus.innerHTML = "Awaiting a Proper Fuel Level to Launch";
+            launchStatus.innerHTML = "Shuttle Not Ready for Launch";
+            launchStatus.style.color = "red";
+        } else {
+            if (Number(fuelInput.value) < 10000) {
+                launchStatus.innerHTML = "Shuttle Not Ready for Launch";
+                launchStatus.style.color = "red";
+                fuelStatus.innerHTML = "Fuel level too low for launch";
+            } else if (Number(fuelInput.value) >= 10000) {
+                fuelStatus.innerHTML ="Fuel level high enough for launch";
             
-    }
+            }
+        }
 
 
-//Validate for if number is pilot or copilot is number. Same for fuel cargo but for string
-    //TODO: pilotStatus and copilotStatus
-    if (validPilotName !== "Empty" && validPilotName === "Not a Number"){
-        pilotStatus.innerHTML = `Pilot ${pilotInput.value} is ready for launch`;
-    }
-
-    if (validCopilotName !== "Empty" && validCopilotName === "Not a Number"){
-        copilotStatus.innerHTML = `Co-pilot ${copilotInput.value} is ready for launch` ;
-    }
+        if (validCargoInput === "Empty" || validCargoInput === "Not a Number"){
+            alert("Cargo mass must be a number of 10,000 or less to launch");
+            cargoStatus.innerHTML = "Awaiting a Proper Cargo Mass Level to Launch";
+            launchStatus.innerHTML = "Shuttle Not Ready for Launch";
+            launchStatus.style.color = "red";
+        } else {
+            if (Number(cargoInput.value) > 10000) {
+                launchStatus.innerHTML = "Shuttle Not Ready for Launch";
+                launchStatus.style.color = "red";
+                cargoStatus.innerHTML = "Cargo mass too heavy for launch";
+            } else if (Number(fuelInput.value) <= 10000) {
+                cargoStatus.innerHTML ="Cargo mass low enough for launch";
+            }
+        }
         
-
-
-    //TODO:  If both cargo and fuel level is valid for launch
-    if (validFuelInput !== "Empty" && validFuelInput === "Is a Number" && validCargoInput !=="Empty" && validCargoInput === "Is a Number" ){
-        if (Number(cargoInput.value) <= 10000 && Number(fuelInput.value) >= 10000){
-        launchStatus.innerHTML = "";
-        launchStatus.style.color = "green";
-        }
-    };
-
-
-
-    //TODO: fuelStatus --- need to make if statement for fuel levels
-    if (validFuelInput !== "Empty" && validFuelInput === "Is a Number"){
-        if (Number(fuelInput.value) < 10000) {
-            launchStatus.innerHTML = "Shuttle Not Ready for Launch";
-            launchStatus.style.color = "red";
-            fuelStatus.innerHTML = "Fuel level too low for launch";
-
-        } else if (Number(fuelInput.value) >= 10000) {
-            fuelStatus.innerHTML ="Fuel level high enough for launch";
-        }
-    }
-
-
-
-    //TODO: cargoStatus -- need to make if statement for cargo mass    
-    if (validCargoInput !=="Empty" && validCargoInput === "Is a Number"){
-        if (Number(cargoInput.value) > 10000) {
-            launchStatus.innerHTML = "Shuttle Not Ready for Launch";
-            launchStatus.style.color = "red";
-            cargoStatus.innerHTML = "Cargo mass low enough for launch";
-    
-        } else if (Number(cargoInput.value) <= 10000) {
-            cargoStatus.innerHTML = "Cargo mass low enough for launch";
-        }
-    }
-
-    //TODO: make the faultyItem div box appear with status update
-    faultyItemsList.style.visibility = "visible";
+        faultyItemsList.style.visibility = "visible";
 
 };
-
-
 
 
 async function myFetch() {
@@ -167,7 +175,7 @@ async function myFetch() {
  //NOTE: I think that's how we did it in Prep Example 1 with an array--- may need to be adjusted to work with a fetched json file.
 function pickPlanet(planets) {
     let randomIndex = Math.floor(Math.random()* planets.length);
-    console.log(planets[randomIndex]);
+    // console.log(planets[randomIndex]);
     return planets[randomIndex];
 }
 
