@@ -2,6 +2,7 @@
 
 require('cross-fetch/polyfill');
 
+
 function addDestinationInfo(document, name, diameter, star, distance, moons, imageUrl) {
   
 
@@ -19,7 +20,6 @@ function addDestinationInfo(document, name, diameter, star, distance, moons, ima
 };
 
 
-
 function validateInput(testInput) {
 
     if (testInput === ""){
@@ -34,8 +34,6 @@ function validateInput(testInput) {
         return "Is a Number"
     }
 }; 
-
-
 
 
 function formSubmission(document, list, pilot, copilot, fuelLevel, cargoLevel) {
@@ -57,34 +55,35 @@ function formSubmission(document, list, pilot, copilot, fuelLevel, cargoLevel) {
 
     if (validPilotName === "Empty" || validCopilotName === "Empty" || validFuelInput=== "Empty" || validCargoInput === "Empty" ) {
         alert("All field are required!");
-        launchStatus.innerHTML="Awaiting Information Before Launch";
-    } else if (validPilotName === "Is a Number" || validCopilotName === "Is a Number" || validFuelInput=== "Not a Number" || validCargoInput === "Not a Number" ){
-        alert("Pilot and copilot must be valid names. Fuel level and cargo mass must be valid numbers");
-    } else {  
-        faultyItemsList.style.visibility= "visible";
-        pilotStatus.innerHTML = `Pilot ${pilot} is ready for launch`;
+    } else if (validPilotName === "Is a Number" || validCopilotName === "Is a Number" || validFuelInput === "Not a Number" || validCargoInput === "Not a Number") {
+        alert("Pilot and co-pilot must be a valid name. Fuel level and cargo mass must be a valid number");   
+    } else 
+        faultyItemsList.style.visibility="visible";
+        pilotStatus.innerHTML= `Pilot ${pilot} is ready for launch`;
         copilotStatus.innerHTML = `Co-pilot ${copilot} is ready for launch`;
-    }
 
-    if (validFuelInput !== "Empty" && Number(fuelLevel) < 10000) {
+    if (Number(fuelLevel) < 10000 && Number(cargoLevel) <= 10000){
         launchStatus.innerHTML = "Shuttle Not Ready for Launch";
         launchStatus.style.color = "red";
-        fuelStatus.innerHTML = "Fuel level too low for launch";
-    } else if (Number(fuelLevel) >= 10000) {
-        fuelStatus.innerHTML ="Fuel level high enough for launch";        
-    }
-
-    if (validCargoInput !== "Empty" && Number(cargoLevel) > 10000) {
-        cargoStatus.innerHTML = "Cargo mass too heavy for launch";
-    } else if (Number(cargoLevel) <= 10000) {
+        fuelStatus.innerHTML ="Fuel level too low for launch";
         cargoStatus.innerHTML ="Cargo mass low enough for launch";
-    }  
-
-    if(Number(fuelLevel) >= 10000 && Number(cargoLevel) <= 10000 ){
-            launchStatus.innerHTML = "Shuttle is Ready for Launch";
-            launchStatus.style.color = "green";
-        }
-    };
+    } else if (Number(fuelLevel) >= 10000 && Number(cargoLevel > 10000)){
+        launchStatus.innerHTML = "Shuttle Not Ready for Launch";
+        launchStatus.style.color = "red";
+        fuelStatus.innerHTML ="Fuel level high enough for launch";
+        cargoStatus.innerHTML ="Cargo mass too heavy for launch";
+    } else if(Number(fuelLevel) < 10000 && Number(cargoLevel) > 10000) {  
+        launchStatus.innerHTML = "Shuttle Not Ready for Launch";
+        launchStatus.style.color = "red";             
+        fuelStatus.innerHTML = "Fuel level too low for launch";
+        cargoStatus.innerHTML = "Cargo mass too heavy for launch";
+    } else {
+        launchStatus.innerHTML = "Shuttle is Ready for Launch";
+        launchStatus.style.color = "green";
+        fuelStatus.innerHTML = "Fuel level high enough for launch";
+        cargoStatus.innerHTML = "Cargo mass low enough for launch";
+    }
+};
     
 
 async function myFetch() {
@@ -104,12 +103,6 @@ function pickPlanet(planets) {
     
     return planets[randomIndex];
 }
-
-
-
-
-
-
 
 
 module.exports.addDestinationInfo = addDestinationInfo;
